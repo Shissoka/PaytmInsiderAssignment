@@ -14,7 +14,6 @@ public class HomeModel {
     @Expose
     private List<String> groupsList;
 
-
     public List<String> getTagsList() {
         return tagsList;
     }

@@ -10,7 +10,6 @@ import android.view.View;
 
 import com.developerssociety.bhargavreddy.paytminsiderassignment.apimanager.wrapper.ApiState;
 import com.developerssociety.bhargavreddy.paytminsiderassignment.databinding.ActivityMainBinding;
-import com.developerssociety.bhargavreddy.paytminsiderassignment.model.ApiResponse;
 import com.developerssociety.bhargavreddy.paytminsiderassignment.model.response.HomeModel;
 import com.developerssociety.bhargavreddy.paytminsiderassignment.viewmodel.HomeViewModel;
 
@@ -46,17 +45,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         homeViewModel.getMutableLiveStateWrapper().removeObserver(observer);
     }
 
-    private  Observer<ApiState<ApiResponse<HomeModel>>> observer=new  Observer<ApiState<ApiResponse<HomeModel>>>() {
+    private  Observer<ApiState<HomeModel>> observer=new  Observer<ApiState<HomeModel>>() {
         @Override
-        public void onChanged(ApiState<ApiResponse<HomeModel>> apiResponseApiState) {
+        public void onChanged(ApiState<HomeModel> apiResponseApiState) {
             switch (apiResponseApiState.getStatus()){
                 case ERROR:
                     break;
                 case LOADING:
                     break;
                 case SUCCESS:
-//                    List<String> tagsList = apiResponseApiState.getData().getData().getTagsList();
-//                    Log.e("tahs list",tagsList.get(0));
+                    List<String> tagsList = apiResponseApiState.getData().getTagsList();
                     break;
             }
         }

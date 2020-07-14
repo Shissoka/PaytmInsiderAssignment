@@ -2,8 +2,6 @@ package com.developerssociety.bhargavreddy.paytminsiderassignment.apimanager.han
 
 import android.util.Log;
 
-import com.developerssociety.bhargavreddy.paytminsiderassignment.model.ApiResponse;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
