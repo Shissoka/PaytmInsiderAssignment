@@ -1,19 +1,24 @@
 package com.developerssociety.bhargavreddy.paytminsiderassignment;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.developerssociety.bhargavreddy.paytminsiderassignment.apimanager.wrapper.ApiState;
 import com.developerssociety.bhargavreddy.paytminsiderassignment.databinding.ActivityMainBinding;
+import com.developerssociety.bhargavreddy.paytminsiderassignment.model.response.FilterOb;
 import com.developerssociety.bhargavreddy.paytminsiderassignment.model.response.HomeModel;
+import com.developerssociety.bhargavreddy.paytminsiderassignment.model.response.ListOb;
+import com.developerssociety.bhargavreddy.paytminsiderassignment.model.response.ShowObject;
 import com.developerssociety.bhargavreddy.paytminsiderassignment.viewmodel.HomeViewModel;
 
+
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -35,7 +40,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onStart() {
         super.onStart();
         homeViewModel.getMutableLiveStateWrapper().observe(this,observer);
-        //Api call..
+
+        getHomeScreenDetails();
+    }
+
+    private void getHomeScreenDetails() {
         homeViewModel.getHomeScreenApi();
     }
 
@@ -54,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 case LOADING:
                     break;
                 case SUCCESS:
-                    List<String> tagsList = apiResponseApiState.getData().getTagsList();
                     break;
             }
         }

@@ -33,6 +33,7 @@ abstract public class ApiCallback<T> implements Callback<T> {
 
     @Override
     public void onFailure(Call<T> call, Throwable t) {
+        Log.e("on failure",t.getLocalizedMessage()+" null");
         handleProcessCompleted();
     }
 }
