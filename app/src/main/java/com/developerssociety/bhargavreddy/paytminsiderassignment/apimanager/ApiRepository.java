@@ -19,7 +19,6 @@ public class ApiRepository  {
     }
 
 
-    //Passing generic response data..
     public <T>  void  makeApiRequest(Call<T> responseCall, MutableLiveStateWrapper<T> mutableLiveStateWrapper){
         GenericRequestHandler<T> genericRequestHandler=new GenericRequestHandler<>();
         genericRequestHandler.doRequest(responseCall,mutableLiveStateWrapper);

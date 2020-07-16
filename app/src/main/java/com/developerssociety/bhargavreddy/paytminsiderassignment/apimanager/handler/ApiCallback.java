@@ -9,14 +9,10 @@ import retrofit2.Response;
 abstract public class ApiCallback<T> implements Callback<T> {
     @Override
     public void onResponse(Call<T> call, Response<T> response) {
-        Log.e("response", response.code() + " ");
-        Log.e("response", response.isSuccessful() + " ");
-        switch (response.code()) {
-            case 200:
-                handleResponseData(response.body());
-                break;
-            default:
-                handleResponseError(response);
+        if (response.isSuccessful()) {
+            handleResponseData(response.body());
+        } else {
+            handleResponseError(response);
         }
     }
 
@@ -28,7 +24,6 @@ abstract public class ApiCallback<T> implements Callback<T> {
 
     @Override
     public void onFailure(Call<T> call, Throwable t) {
-        Log.e("on failure",t.getLocalizedMessage()+" null");
         handleException(t);
     }
 }

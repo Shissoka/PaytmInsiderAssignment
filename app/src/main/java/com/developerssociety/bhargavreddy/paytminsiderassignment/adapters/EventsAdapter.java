@@ -73,10 +73,12 @@ public class EventsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         InflateEventsBinding inflateEventsBinding = InflateEventsBinding.inflate(layoutInflater, parent, false);
         int width = CommUtil.getScreenWidth();
         ViewGroup.LayoutParams params = inflateEventsBinding.getRoot().getLayoutParams();
+        //to make item partially visible.
         params.width = (int) (width * 0.90);
         inflateEventsBinding.getRoot().measure(
                 View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        //making it similar height throughout cards.
         params.height = inflateEventsBinding.getRoot().getMeasuredHeight();
         inflateEventsBinding.getRoot().setLayoutParams(params);
         return new EventsViewHolder(inflateEventsBinding);
@@ -108,9 +110,12 @@ public class EventsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             binding.timeText.setText(eventDataSortedList.get(pos).getVenueDateString());
             binding.venueDetails.setText(eventDataSortedList.get(pos).getVenueName());
             if (eventDataSortedList.get(pos).getMinPrice() == 0) {
-                binding.minPrice.setText("FREE");
+                binding.minPrice.setText(R.string.free);
             } else {
-                binding.minPrice.setText(context.getResources().getString(R.string.Rs) + " " + eventDataSortedList.get(pos).getPriceDisplayString());
+                String stringBuilder = context.getResources().getString(R.string.Rs) +
+                        " " +
+                        eventDataSortedList.get(pos).getPriceDisplayString();
+                binding.minPrice.setText(stringBuilder);
             }
 
             Picasso.get().load(eventDataSortedList.get(pos).getHorizontalCoverImage()).fit().into(binding.eventImageID);

@@ -13,7 +13,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitCreator {
 
-    private String token = null;
     private ApiServiceClass apiServiceClass;
     private static RetrofitCreator retrofitCreator;
 

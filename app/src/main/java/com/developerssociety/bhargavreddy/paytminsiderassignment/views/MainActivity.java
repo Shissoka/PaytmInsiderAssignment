@@ -46,7 +46,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setContentView(activityMainBinding.getRoot());
         setProgressBar(activityMainBinding.progressBar);
 
-        //Viewmodel init
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         homeAdapter = new HomeAdapter(this);
         activityMainBinding.homeRecyclerView.setAdapter(homeAdapter);
@@ -55,9 +54,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onStart() {
         super.onStart();
-        homeViewModel.getMutableLiveStateWrapper().observe(this, observer);
+        registerObserver();
 
         getHomeScreenDetails();
+    }
+
+    private void registerObserver() {
+        homeViewModel.getMutableLiveStateWrapper().observe(this, observer);
     }
 
     private void getHomeScreenDetails() {
@@ -67,10 +70,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onStop() {
         super.onStop();
-        homeViewModel.getMutableLiveStateWrapper().removeObserver(observer);
+        deregisterObserver();
         if (disposable != null) {
             disposable.dispose();
         }
+    }
+
+    private void deregisterObserver() {
+        homeViewModel.getMutableLiveStateWrapper().removeObserver(observer);
     }
 
     private Disposable disposable;
@@ -116,8 +123,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     }
 
                     //Adding Digital Event Groups.
-                    if(CommUtil.isAllowed(data.getDigitalEventGroupObjectList())){
-                        FinalHomeData finalHomeData=new FinalHomeData();
+                    if (CommUtil.isAllowed(data.getDigitalEventGroupObjectList())) {
+                        FinalHomeData finalHomeData = new FinalHomeData();
                         finalHomeData.setPriority(priority--);
                         finalHomeData.setLayoutId(Commons.DIGITAL_EVENT_LAYOUT_ID);
                         finalHomeData.setDigitalEventGroupObjectList(data.getDigitalEventGroupObjectList());
@@ -125,7 +132,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         finalHomeData.setDescription(data.getDigitalEventsDecription());
                         listInternal.add(finalHomeData);
                     }
-
 
                     //Adding Feature Data
                     if (CommUtil.isAllowed(data.getFeaturedDataList())) {
