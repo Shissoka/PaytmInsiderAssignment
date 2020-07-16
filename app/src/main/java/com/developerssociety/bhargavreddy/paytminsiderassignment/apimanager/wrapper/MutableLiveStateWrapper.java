@@ -18,9 +18,6 @@ public class MutableLiveStateWrapper<T> extends LiveData<ApiState<T>> {
         setValue(new ApiState<T>().success(data));
     }
 
-    public void postStatusFalse(String message){
-        setValue(new ApiState<T>().statusFalse(message));
-    }
 
     public void postCompleted() {
         setValue(new ApiState<T>().completed());

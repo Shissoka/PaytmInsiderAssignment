@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     app:cardCornerRadius="9dp"
     app:cardElevation="10dp"
-    app:cardPreventCornerOverlap="true"
+    app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,14 +26,14 @@
         <TextView
             android:id="@+id/eventHeadingText"
             style="@style/mediumText"
-            android:autoSizeTextType="uniform"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="heading"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:maxLines="2"
+            android:text="Heading\nasdasd"
             app:layout_constrainedWidth="true"
-            android:maxLines="1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,25 +41,31 @@
 
         <TextView
             android:id="@+id/timeText"
-            android:autoSizeTextType="uniform"
             style="@style/descriptionText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="TextView"
+            android:layout_marginEnd="5dp"
             android:maxLines="1"
+            android:text="TextView"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/eventHeadingText"
             app:layout_constraintTop_toBottomOf="@+id/eventHeadingText" />
 
         <TextView
             android:id="@+id/venueDetails"
             style="@style/descriptionText"
-            android:autoSizeTextType="uniform"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="TextView"
+            android:layout_marginEnd="5dp"
             android:maxLines="1"
+            android:text="TextView"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/timeText"
             app:layout_constraintTop_toBottomOf="@+id/timeText" />
 
@@ -68,14 +74,15 @@
             style="@style/headingText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            app:layout_constrainedWidth="true"
-            android:maxLines="1"
+            android:layout_marginTop="30dp"
             android:layout_marginBottom="15dp"
+            android:maxLines="1"
             android:text="TextView"
+            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/venueDetails"
-            app:layout_constraintTop_toBottomOf="@+id/venueDetails" />
+            app:layout_constraintTop_toBottomOf="@+id/venueDetails"
+            app:layout_constraintVertical_bias="1.0" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

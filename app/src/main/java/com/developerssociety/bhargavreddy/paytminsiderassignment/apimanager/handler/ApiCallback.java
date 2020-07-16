@@ -23,8 +23,6 @@ abstract public class ApiCallback<T> implements Callback<T> {
 
     abstract protected void handleProcessCompleted();
 
-    abstract protected void handleStatusFalse(String message);
-
     abstract protected void handleResponseData(T data);
 
     abstract protected void handleError(retrofit2.Response<T> response);

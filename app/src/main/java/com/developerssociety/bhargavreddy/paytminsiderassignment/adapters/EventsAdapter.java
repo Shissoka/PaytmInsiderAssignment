@@ -1,12 +1,12 @@
 package com.developerssociety.bhargavreddy.paytminsiderassignment.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
@@ -64,6 +64,8 @@ public class EventsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         eventDataSortedList.addAll(list);
     }
 
+
+
     @NonNull
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -72,6 +74,10 @@ public class EventsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
         int width = CommUtil.getScreenWidth();
         ViewGroup.LayoutParams params = inflateEventsBinding.getRoot().getLayoutParams();
         params.width = (int) (width * 0.90);
+        inflateEventsBinding.getRoot().measure(
+                View.MeasureSpec.makeMeasureSpec(width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        params.height = inflateEventsBinding.getRoot().getMeasuredHeight();
         inflateEventsBinding.getRoot().setLayoutParams(params);
         return new EventsViewHolder(inflateEventsBinding);
     }
@@ -108,6 +114,11 @@ public class EventsAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             }
 
             Picasso.get().load(eventDataSortedList.get(pos).getHorizontalCoverImage()).fit().into(binding.eventImageID);
+        }
+
+        @Override
+        public LinearLayoutManager getLayoutManager() {
+            return null;
         }
     }
 }

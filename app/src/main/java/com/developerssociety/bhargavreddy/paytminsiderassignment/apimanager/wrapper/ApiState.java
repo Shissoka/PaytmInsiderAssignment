@@ -29,13 +29,6 @@ public class ApiState<T> {
         return this;
     }
 
-    public ApiState<T> statusFalse(@NonNull String message) {
-        this.status = DataStatus.STATUS_FALSE;
-        this.data = null;
-        this.error = null;
-        this.message=message;
-        return this;
-    }
 
     public ApiState<T> success(@NonNull T data) {
         this.status = DataStatus.SUCCESS;
@@ -84,7 +77,6 @@ public class ApiState<T> {
         LOADING,
         SUCCESS,
         COMPLETED,
-        ERROR,
-        STATUS_FALSE
+        ERROR
     }
 }

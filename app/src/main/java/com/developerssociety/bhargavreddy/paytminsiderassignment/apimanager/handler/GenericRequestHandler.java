@@ -17,11 +17,7 @@ public  class GenericRequestHandler<R> {
             protected void handleProcessCompleted() {
                 liveData.postCompleted();
             }
-            
-            @Override
-            protected void handleStatusFalse(String message) {
-                liveData.postStatusFalse(message);
-            }
+
 
             @Override
             protected void handleResponseData(R response) {

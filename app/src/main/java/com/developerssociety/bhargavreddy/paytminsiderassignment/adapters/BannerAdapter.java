@@ -1,11 +1,11 @@
 package com.developerssociety.bhargavreddy.paytminsiderassignment.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SortedList;
 
@@ -94,9 +94,12 @@ public class BannerAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
         @Override
         public void onBind(int pos) {
-            Log.e("pos",sortedBannerList.get(pos).getVerticalCoverImage());
-            Log.e("chck",sortedBannerList.get(pos).getPriority()+" ");
             Picasso.get().load(sortedBannerList.get(pos).getVerticalCoverImage()).fit().into(binding.banner);
+        }
+
+        @Override
+        public LinearLayoutManager getLayoutManager() {
+            return null;
         }
     }
 
