@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PaytmInsiderAssignment</string>
+    <string name="Rs">\u20B9</string>
 </resources>

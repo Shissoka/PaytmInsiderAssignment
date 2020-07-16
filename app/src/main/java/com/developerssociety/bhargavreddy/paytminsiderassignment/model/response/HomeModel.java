@@ -1,5 +1,6 @@
 package com.developerssociety.bhargavreddy.paytminsiderassignment.model.response;
 
+import com.developerssociety.bhargavreddy.paytminsiderassignment.model.response.event.DisplayDetails;
 import com.developerssociety.bhargavreddy.paytminsiderassignment.model.response.event.EventData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -39,7 +40,7 @@ public class HomeModel {
 
     @SerializedName("text")
     @Expose
-    Object dynamicText;
+    Map<String, DisplayDetails> dynamicText;
 
     @SerializedName("featured")
     @Expose
@@ -118,13 +119,7 @@ public class HomeModel {
         this.popularEventDataList = popularEventDataList;
     }
 
-    public Object getDynamicText() {
-        return dynamicText;
-    }
 
-    public void setDynamicText(Object dynamicText) {
-        this.dynamicText = dynamicText;
-    }
 
     public List<EventData> getFeaturedDataList() {
         return featuredDataList;
@@ -156,5 +151,21 @@ public class HomeModel {
 
     public void setDigitalEventsDecription(String digitalEventsDecription) {
         this.digitalEventsDecription = digitalEventsDecription;
+    }
+
+    public Map<String, DisplayDetails> getDynamicText() {
+        return dynamicText;
+    }
+
+    public void setDynamicText(Map<String, DisplayDetails> dynamicText) {
+        this.dynamicText = dynamicText;
+    }
+
+    public List<DigitalEventGroupObject> getDigitalEventGroupObjectList() {
+        return digitalEventGroupObjectList;
+    }
+
+    public void setDigitalEventGroupObjectList(List<DigitalEventGroupObject> digitalEventGroupObjectList) {
+        this.digitalEventGroupObjectList = digitalEventGroupObjectList;
     }
 }
