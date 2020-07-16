@@ -13,11 +13,6 @@ public  class GenericRequestHandler<R> {
         //Loading the live data
         liveData.postLoading();
         responseCall.enqueue(new ApiCallback<R>() {
-            @Override
-            protected void handleProcessCompleted() {
-                liveData.postCompleted();
-            }
-
 
             @Override
             protected void handleResponseData(R response) {
@@ -25,13 +20,13 @@ public  class GenericRequestHandler<R> {
             }
 
             @Override
-            protected void handleError(Response<R> response) {
-
+            protected void handleResponseError(Response<R> response) {
+                liveData.postFailure(response);
             }
 
             @Override
-            protected void handleException(Exception t) {
-
+            protected void handleException(Throwable t) {
+                liveData.postException(t);
             }
 
         });

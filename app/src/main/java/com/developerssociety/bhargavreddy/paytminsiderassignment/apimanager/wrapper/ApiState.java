@@ -3,6 +3,8 @@ package com.developerssociety.bhargavreddy.paytminsiderassignment.apimanager.wra
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import retrofit2.Response;
+
 public class ApiState<T> {
 
     @NonNull
@@ -12,20 +14,25 @@ public class ApiState<T> {
     private T data;
 
     @Nullable
+    private Response<T> responseError;
+
+
+    @Nullable
     private Throwable error;
 
-    private String message;
 
     public ApiState() {
         this.status = DataStatus.LOADING;
         this.data = null;
         this.error = null;
+        this.responseError = null;
     }
 
     public ApiState<T> loading() {
         this.status = DataStatus.LOADING;
         this.data = null;
         this.error = null;
+        this.responseError = null;
         return this;
     }
 
@@ -34,27 +41,26 @@ public class ApiState<T> {
         this.status = DataStatus.SUCCESS;
         this.data = data;
         this.error = null;
+        this.responseError = null;
         return this;
     }
 
 
-    public ApiState<T> completed() {
-        this.status = DataStatus.COMPLETED;
+    public ApiState<T> failure(@NonNull Response<T> responseError) {
+        this.status = DataStatus.FAILURE;
         this.data = null;
+        this.responseError = responseError;
         this.error = null;
         return this;
     }
 
-    public ApiState<T> error(@NonNull Throwable error) {
-        this.status = DataStatus.ERROR;
+
+    public ApiState<T> Exception(@NonNull Throwable error) {
+        this.status = DataStatus.EXCEPTION;
         this.data = null;
         this.error = error;
-        this.message = null;
+        this.responseError = null;
         return this;
-    }
-
-    public String getMessage(){
-        return message;
     }
 
 
@@ -73,10 +79,15 @@ public class ApiState<T> {
         return error;
     }
 
+    @Nullable
+    public Response<T> getResponseError() {
+        return responseError;
+    }
+
     public enum DataStatus {
         LOADING,
         SUCCESS,
-        COMPLETED,
-        ERROR
+        EXCEPTION,
+        FAILURE
     }
 }

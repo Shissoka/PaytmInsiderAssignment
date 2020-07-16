@@ -22,6 +22,11 @@ import com.developerssociety.bhargavreddy.paytminsiderassignment.viewmodel.HomeV
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private HomeViewModel homeViewModel;
@@ -39,6 +44,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         activityMainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(activityMainBinding.getRoot());
+        setProgressBar(activityMainBinding.progressBar);
 
         //Viewmodel init
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -62,74 +68,100 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onStop() {
         super.onStop();
         homeViewModel.getMutableLiveStateWrapper().removeObserver(observer);
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
-    private Observer<ApiState<HomeModel>> observer = new Observer<ApiState<HomeModel>>() {
-        @Override
-        public void onChanged(ApiState<HomeModel> apiResponseApiState) {
-            switch (apiResponseApiState.getStatus()) {
-                case ERROR:
-                    break;
-                case LOADING:
-                    break;
-                case SUCCESS:
-                    if (apiResponseApiState.getData() != null) {
-                        populateData(apiResponseApiState.getData());
-                    } else {
-                        //No data screen..
-                    }
-                    break;
-                case COMPLETED:
-
-                    break;
-            }
+    private Disposable disposable;
+    private Observer<ApiState<HomeModel>> observer = apiResponseApiState -> {
+        switch (apiResponseApiState.getStatus()) {
+            case LOADING:
+                showProgress();
+                break;
+            case SUCCESS:
+                if (apiResponseApiState.getData() != null) {
+                    disposable = populateData(apiResponseApiState.getData());
+                } else {
+                    hideProgress();
+                    //No data on screen...
+                }
+                break;
+            case FAILURE:
+                hideProgress();
+                showSnackbar(activityMainBinding.getRoot(), "Bad Request or Error in parsing");
+                break;
+            case EXCEPTION:
+                hideProgress();
+                showSnackbar(activityMainBinding.getRoot(), "May be a connection isssue");
+                break;
         }
     };
 
-    private void populateData(HomeModel data) {
-        List<FinalHomeData> finalHomeDataList = new ArrayList<>();
-        int priority = Integer.MAX_VALUE;
-        if (CommUtil.isAllowed(data.getBannerData())) {
-            FinalHomeData finalHomeData = new FinalHomeData();
-            finalHomeData.setText("Banners");
-            finalHomeData.setPriority(priority--);
-            finalHomeData.setLayoutId(Commons.BANNER_LAYOUT_ID);
-            finalHomeData.setBannerList(data.getBannerData());
-            finalHomeDataList.add(finalHomeData);
-        }
 
-        if (CommUtil.isAllowed(data.getFeaturedDataList())) {
-            FinalHomeData finalHomeData = new FinalHomeData();
-            finalHomeData.setLayoutId(Commons.EVENT_LAYOUT_ID);
-            finalHomeData.setText("Featured Events");
-            finalHomeData.setPriority(priority--);
-            finalHomeData.setEventDataList(data.getFeaturedDataList());
-            finalHomeDataList.add(finalHomeData);
-        }
+    private Disposable populateData(HomeModel homeData) {
+        //processing data on Computation thread.
+        return Observable.just(homeData)
+                .map(data -> {
+                    int priority = Integer.MAX_VALUE;
+                    List<FinalHomeData> listInternal = new ArrayList<>();
+                    //Adding banners
+                    if (CommUtil.isAllowed(data.getBannerData())) {
+                        FinalHomeData finalHomeData = new FinalHomeData();
+                        finalHomeData.setText("Banners");
+                        finalHomeData.setPriority(priority--);
+                        finalHomeData.setLayoutId(Commons.BANNER_LAYOUT_ID);
+                        finalHomeData.setBannerList(data.getBannerData());
+                        listInternal.add(finalHomeData);
+                    }
 
-        if (CommUtil.isAllowed(data.getGroupsList())) {
-            for (String groupName : data.getGroupsList()) {
-                List<String> eventKeyList = data.getListOb().getGroupWiseList().get(groupName);
-                if (!CommUtil.isAllowed(eventKeyList))
-                    continue;
-                List<EventData> list = new ArrayList<>();
-                for (String keyName : eventKeyList) {
-                    list.add(data.getListOb().getMasterList().get(keyName));
-                }
-                FinalHomeData finalHomeData = new FinalHomeData();
-                finalHomeData.setText(groupName);
-                finalHomeData.setLayoutId(Commons.EVENT_LAYOUT_ID);
-                finalHomeData.setPriority(priority--);
-                finalHomeData.setEventDataList(list);
 
-                finalHomeDataList.add(finalHomeData);
-            }
-        }
-        homeAdapter.setData(finalHomeDataList);
+                    //Adding Feature Data
+                    if (CommUtil.isAllowed(data.getFeaturedDataList())) {
+                        FinalHomeData finalHomeData = new FinalHomeData();
+                        finalHomeData.setLayoutId(Commons.EVENT_LAYOUT_ID);
+                        finalHomeData.setText("Featured Events");
+                        finalHomeData.setPriority(priority--);
+                        finalHomeData.setEventDataList(data.getFeaturedDataList());
+                        listInternal.add(finalHomeData);
+                    }
+
+                    //Adding data based on groups
+                    if (CommUtil.isAllowed(data.getGroupsList())) {
+                        for (String groupName : data.getGroupsList()) {
+                            List<String> eventKeyList = data.getListOb().getGroupWiseList().get(groupName);
+                            if (!CommUtil.isAllowed(eventKeyList))
+                                continue;
+                            List<EventData> list = new ArrayList<>();
+                            for (String keyName : eventKeyList) {
+                                list.add(data.getListOb().getMasterList().get(keyName));
+                            }
+                            FinalHomeData finalHomeData = new FinalHomeData();
+                            finalHomeData.setText(groupName);
+                            finalHomeData.setLayoutId(Commons.EVENT_LAYOUT_ID);
+                            finalHomeData.setPriority(priority--);
+                            finalHomeData.setEventDataList(list);
+
+                            listInternal.add(finalHomeData);
+                        }
+                    }
+                    return listInternal;
+                }).subscribeOn(Schedulers.computation()).observeOn(AndroidSchedulers.mainThread()).subscribe(finalList -> {
+                    //setting final data on main thread.
+                    homeAdapter.setData(finalList);
+                    hideProgress();
+                });
+
     }
+
 
     @Override
     public void onClick(View v) {
+        homeViewModel.getHomeScreenApi();
+    }
+
+    @Override
+    public void retryApi() {
         homeViewModel.getHomeScreenApi();
     }
 }

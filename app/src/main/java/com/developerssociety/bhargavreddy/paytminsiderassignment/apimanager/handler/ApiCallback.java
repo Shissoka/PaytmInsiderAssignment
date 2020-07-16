@@ -16,22 +16,19 @@ abstract public class ApiCallback<T> implements Callback<T> {
                 handleResponseData(response.body());
                 break;
             default:
-                handleError(response);
+                handleResponseError(response);
         }
-        handleProcessCompleted();
     }
-
-    abstract protected void handleProcessCompleted();
 
     abstract protected void handleResponseData(T data);
 
-    abstract protected void handleError(retrofit2.Response<T> response);
+    abstract protected void handleResponseError(retrofit2.Response<T> response);
 
-    abstract protected void handleException(Exception t);
+    abstract protected void handleException(Throwable t);
 
     @Override
     public void onFailure(Call<T> call, Throwable t) {
         Log.e("on failure",t.getLocalizedMessage()+" null");
-        handleProcessCompleted();
+        handleException(t);
     }
 }
