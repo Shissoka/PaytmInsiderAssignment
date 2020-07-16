@@ -23,7 +23,7 @@
     <style name="headingText" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/heading_text</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:letterSpacing">@dimen/letterSpacing</item>
+        <item name="android:letterSpacing">@dimen/letterSpacing_V2</item>
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
@@ -32,7 +32,7 @@
         <item name="android:textSize">@dimen/medium_text</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:letterSpacing">@dimen/letterSpacing</item>
+        <item name="android:letterSpacing">@dimen/letterSpacing_V2</item>
     </style>
 
     <style name="descriptionText" parent="@android:style/Widget.TextView">
@@ -46,4 +46,5 @@
 
     <item name="letterSpacing" type="dimen" format="float">0.04</item>
     <item name="alphaVal" type="dimen" format="float">0.6</item>
+    <item name="letterSpacing_V2" type="dimen" format="float">0.01</item>
 </resources>

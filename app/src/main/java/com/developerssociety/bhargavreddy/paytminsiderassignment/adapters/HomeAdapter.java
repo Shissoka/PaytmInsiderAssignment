@@ -2,11 +2,13 @@ package com.developerssociety.bhargavreddy.paytminsiderassignment.adapters;
 
 import android.content.Context;
 import android.os.Parcelable;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +24,9 @@ import java.util.List;
 public class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     private HashMap<Integer, Parcelable> scrollMap = new HashMap<>();
+    private static int VIEW_NORMAL = 1;
+
+    private static int VIEW_SPACING = 2;
 
     private final SortedList<FinalHomeData> sortedList = new SortedList<>(FinalHomeData.class, new SortedList.Callback<FinalHomeData>() {
         @Override
@@ -76,10 +81,35 @@ public class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     @Override
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        InflateRecyclerviewBinding inflateRecyclerviewBinding = InflateRecyclerviewBinding.inflate(layoutInflater, parent, false);
-        return new HomeViewHolder(inflateRecyclerviewBinding);
+        if (viewType == VIEW_NORMAL) {
+            InflateRecyclerviewBinding inflateRecyclerviewBinding = InflateRecyclerviewBinding.inflate(layoutInflater, parent, false);
+            return new HomeViewHolder(inflateRecyclerviewBinding);
+        } else {
+            InflateRecyclerviewBinding inflateRecyclerviewBinding = InflateRecyclerviewBinding.inflate(layoutInflater, parent, false);
+            ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) inflateRecyclerviewBinding.horizontalRecyclerView.getLayoutParams();
+            marginLayoutParams.leftMargin = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    14,
+                    context.getResources().getDisplayMetrics()
+            );
+            marginLayoutParams.rightMargin = (int) TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    14,
+                    context.getResources().getDisplayMetrics()
+            );
+            inflateRecyclerviewBinding.horizontalRecyclerView.setLayoutParams(marginLayoutParams);
+            return new HomeViewHolder(inflateRecyclerviewBinding);
+        }
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (sortedList.get(position).getLayoutId() == Commons.DIGITAL_EVENT_LAYOUT_ID) {
+            return VIEW_SPACING;
+        } else {
+            return VIEW_NORMAL;
+        }
+    }
 
     @Override
     public void onViewRecycled(@NonNull BaseViewHolder holder) {
@@ -106,17 +136,15 @@ public class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     public class HomeViewHolder extends BaseViewHolder {
 
         private InflateRecyclerviewBinding binding;
-        private LinearLayoutManager layoutManager;
 
         public HomeViewHolder(@NonNull InflateRecyclerviewBinding inflateRecyclerviewBinding) {
             super(inflateRecyclerviewBinding.getRoot());
             this.binding = inflateRecyclerviewBinding;
-            layoutManager = new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false);
         }
 
         @Override
-        public LinearLayoutManager getLayoutManager() {
-            return layoutManager;
+        public RecyclerView.LayoutManager getLayoutManager() {
+            return binding.horizontalRecyclerView.getLayoutManager();
         }
 
         @Override
@@ -124,11 +152,11 @@ public class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
             switch (sortedList.get(position).getLayoutId()) {
                 case Commons.BANNER_LAYOUT_ID:
                     BannerAdapter bannerAdapter = new BannerAdapter(context);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
+                    binding.horizontalRecyclerView.setLayoutManager(linearLayoutManager);
                     binding.horizontalRecyclerView.setAdapter(bannerAdapter);
-                    binding.horizontalRecyclerView.setLayoutManager(layoutManager);
-
                     binding.descriptonText.setVisibility(View.GONE);
-
+                    binding.headingText.setVisibility(View.GONE);
                     if (binding.horizontalRecyclerView.getOnFlingListener() == null) {
                         PagerSnapHelper snapHelper = new PagerSnapHelper();
                         snapHelper.attachToRecyclerView(binding.horizontalRecyclerView);
@@ -136,21 +164,36 @@ public class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
                     binding.horizontalRecyclerView.setHasFixedSize(true);
 
-                    binding.headingText.setVisibility(View.GONE);
+
                     bannerAdapter.setData(sortedList.get(position).getBannerList());
                     break;
                 case Commons.EVENT_LAYOUT_ID:
                     EventsAdapter eventsAdapter = new EventsAdapter(context, sortedList.get(position).getEventDataList());
-                    binding.horizontalRecyclerView.setLayoutManager(layoutManager);
-
                     binding.horizontalRecyclerView.setHasFixedSize(true);
-
+                    LinearLayoutManager linearLayoutManagerEvent = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
+                    binding.horizontalRecyclerView.setLayoutManager(linearLayoutManagerEvent);
                     binding.horizontalRecyclerView.setAdapter(eventsAdapter);
 
                     binding.descriptonText.setVisibility(View.GONE);
                     binding.headingText.setVisibility(View.VISIBLE);
                     binding.horizontalRecyclerView.setOnFlingListener(null);
                     binding.headingText.setText(sortedList.get(position).getText());
+                    break;
+                case Commons.DIGITAL_EVENT_LAYOUT_ID:
+                    DigitalAdapter digitalAdapter = new DigitalAdapter(context, sortedList.get(position).getDigitalEventGroupObjectList());
+
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 3);
+                    binding.horizontalRecyclerView.setLayoutManager(gridLayoutManager);
+
+                    binding.horizontalRecyclerView.setHasFixedSize(true);
+                    binding.horizontalRecyclerView.setAdapter(digitalAdapter);
+
+                    binding.descriptonText.setText(sortedList.get(position).getDescription());
+                    binding.headingText.setText(sortedList.get(position).getText());
+
+                    binding.descriptonText.setVisibility(View.VISIBLE);
+                    binding.headingText.setVisibility(View.VISIBLE);
+                    binding.horizontalRecyclerView.setOnFlingListener(null);
                     break;
 
             }

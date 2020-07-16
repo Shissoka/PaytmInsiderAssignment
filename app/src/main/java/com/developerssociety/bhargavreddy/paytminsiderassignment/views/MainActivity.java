@@ -115,12 +115,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         listInternal.add(finalHomeData);
                     }
 
+                    //Adding Digital Event Groups.
+                    if(CommUtil.isAllowed(data.getDigitalEventGroupObjectList())){
+                        FinalHomeData finalHomeData=new FinalHomeData();
+                        finalHomeData.setPriority(priority--);
+                        finalHomeData.setLayoutId(Commons.DIGITAL_EVENT_LAYOUT_ID);
+                        finalHomeData.setDigitalEventGroupObjectList(data.getDigitalEventGroupObjectList());
+                        finalHomeData.setText("DISCOVER DIGITAL EVENTS");
+                        finalHomeData.setDescription(data.getDigitalEventsDecription());
+                        listInternal.add(finalHomeData);
+                    }
+
 
                     //Adding Feature Data
                     if (CommUtil.isAllowed(data.getFeaturedDataList())) {
                         FinalHomeData finalHomeData = new FinalHomeData();
                         finalHomeData.setLayoutId(Commons.EVENT_LAYOUT_ID);
-                        finalHomeData.setText("Featured Events");
+                        finalHomeData.setText("FEATURED EVENTS");
                         finalHomeData.setPriority(priority--);
                         finalHomeData.setEventDataList(data.getFeaturedDataList());
                         listInternal.add(finalHomeData);
@@ -137,7 +148,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                 list.add(data.getListOb().getMasterList().get(keyName));
                             }
                             FinalHomeData finalHomeData = new FinalHomeData();
-                            finalHomeData.setText(groupName);
+                            finalHomeData.setText(groupName.toUpperCase());
                             finalHomeData.setLayoutId(Commons.EVENT_LAYOUT_ID);
                             finalHomeData.setPriority(priority--);
                             finalHomeData.setEventDataList(list);

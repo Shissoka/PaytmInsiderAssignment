@@ -7,18 +7,22 @@ import com.developerssociety.bhargavreddy.paytminsiderassignment.model.response.
 import java.util.List;
 
 public class FinalHomeData {
-    //    layoutId 1 for banner
-    //else for others..
     private int layoutId;
 
     private int priority;
     private String text;
 
     @Nullable
+    private String description;
+
+    @Nullable
     List<Banner> bannerList;
 
     @Nullable
     List<EventData> eventDataList;
+
+    @Nullable
+    List<DigitalEventGroupObject> digitalEventGroupObjectList;
 
     public int getLayoutId() {
         return layoutId;
@@ -60,5 +64,23 @@ public class FinalHomeData {
 
     public void setEventDataList(@Nullable List<EventData> eventDataList) {
         this.eventDataList = eventDataList;
+    }
+
+    @Nullable
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(@Nullable String description) {
+        this.description = description;
+    }
+
+    @Nullable
+    public List<DigitalEventGroupObject> getDigitalEventGroupObjectList() {
+        return digitalEventGroupObjectList;
+    }
+
+    public void setDigitalEventGroupObjectList(@Nullable List<DigitalEventGroupObject> digitalEventGroupObjectList) {
+        this.digitalEventGroupObjectList = digitalEventGroupObjectList;
     }
 }
