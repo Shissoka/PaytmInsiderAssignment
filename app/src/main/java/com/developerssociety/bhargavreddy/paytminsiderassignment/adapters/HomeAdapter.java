@@ -75,7 +75,12 @@ public class HomeAdapter extends RecyclerView.Adapter<BaseViewHolder> {
     }
 
     public void setData(List<FinalHomeData> data) {
-        sortedList.addAll(data);
+        if (sortedList.size() == 0) {
+            sortedList.addAll(data);
+        } else {
+            sortedList.clear();
+            sortedList.addAll(data);
+        }
         notifyDataSetChanged();
     }
 

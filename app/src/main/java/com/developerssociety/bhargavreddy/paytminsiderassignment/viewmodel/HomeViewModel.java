@@ -18,8 +18,8 @@ public class HomeViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public void getHomeScreenApi() {
-        ApiRepository.getInstance().makeApiRequest(RetrofitCreator.getInstance().getApiServiceClass().getHomeApi(), mutableLiveStateWrapper);
+    public void getHomeScreenApi(String val) {
+        ApiRepository.getInstance().makeApiRequest(RetrofitCreator.getInstance().getApiServiceClass().getHomeApi(val), mutableLiveStateWrapper);
     }
 
     public MutableLiveStateWrapper<HomeModel> getMutableLiveStateWrapper() {

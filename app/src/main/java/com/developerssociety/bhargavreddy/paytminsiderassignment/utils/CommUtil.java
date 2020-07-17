@@ -18,5 +18,22 @@ public class CommUtil {
         return o!=null&&o.size()!=0;
     }
 
+    public static String getRandomCity(){
+        int i= (int) (System.currentTimeMillis()%4);
+        switch (i){
+            case 0:
+                return "hyderabad";
+            case 1:
+                return "bangalore";
+            case 2:
+                return "mumbai";
+            case 3:
+                return "delhi";
+            default:
+                return "hyderabad";
+        }
+    }
+
+
 }
 

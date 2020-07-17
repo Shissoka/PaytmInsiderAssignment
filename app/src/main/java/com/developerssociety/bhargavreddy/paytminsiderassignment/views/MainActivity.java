@@ -18,6 +18,8 @@ import com.developerssociety.bhargavreddy.paytminsiderassignment.model.response.
 import com.developerssociety.bhargavreddy.paytminsiderassignment.utils.CommUtil;
 import com.developerssociety.bhargavreddy.paytminsiderassignment.utils.Commons;
 import com.developerssociety.bhargavreddy.paytminsiderassignment.viewmodel.HomeViewModel;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         setContentView(activityMainBinding.getRoot());
         setProgressBar(activityMainBinding.progressBar);
 
+        activityMainBinding.homeText.setOnClickListener(this);
+
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         homeAdapter = new HomeAdapter(this);
         activityMainBinding.homeRecyclerView.setAdapter(homeAdapter);
@@ -56,15 +60,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onStart();
         registerObserver();
 
-        getHomeScreenDetails();
+        getHomeScreenDetails("hyderabad");
+        Snackbar snackbar=Snackbar.make(activityMainBinding.getRoot(),"Test case simulated to hyderabad",Snackbar.LENGTH_LONG);
+        snackbar.show();
     }
 
     private void registerObserver() {
         homeViewModel.getMutableLiveStateWrapper().observe(this, observer);
     }
 
-    private void getHomeScreenDetails() {
-        homeViewModel.getHomeScreenApi();
+    private void getHomeScreenDetails(String randomCity) {
+        homeViewModel.getHomeScreenApi(randomCity);
     }
 
     @Override
@@ -174,11 +180,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        homeViewModel.getHomeScreenApi();
+        if (v.getId() == R.id.homeText) {
+            String randomCity = CommUtil.getRandomCity();
+            getHomeScreenDetails(randomCity);
+            Snackbar snackbar = Snackbar.make(activityMainBinding.getRoot(), "Test case simulating to state " + randomCity, Snackbar.LENGTH_LONG);
+            snackbar.show();
+        }
     }
 
     @Override
     public void retryApi() {
-        homeViewModel.getHomeScreenApi();
+        getHomeScreenDetails(CommUtil.getRandomCity());
     }
 }
